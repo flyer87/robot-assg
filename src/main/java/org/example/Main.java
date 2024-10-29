@@ -16,7 +16,6 @@ public class Main {
     public static void main(String[] args) {
         GetGridSize();
 
-
 //        // Enter: X Y Direction
 //        System.out.print("Enter the position of the robot and the direction it is facing");
 //        System.out.print("Two number and a letter. Divide by intervals");
@@ -75,23 +74,19 @@ public class Main {
 
         // System.out.println("Entered instructions: " + instructionsLine);
 
-        for (int i = 0; i < instructions.length; i++) {
-            // turn
-            if (!instructions[i].equals(FORWARD)){
-                // turn right
-                PrepareNextStep(current_direction, instructions[i], x_step, y_step);
-            }
-
-//            if (instructions[i].equals("L")){
-//                // turn left
-//                PrepareNextStep(current_direction, instructions[i], x_step, y_step);
-//            }
-
+        for (String instruction : instructions) {
             // move
-            if (instructions[i].equals(FORWARD)) {
-                // move
+            if (instruction.equals(FORWARD)) {
                 curent_depth_pos += y_step.get();
                 curent_width_pos += x_step.get();
+            }
+
+            // turn
+            if (!instruction.equals(FORWARD)) {
+                x_step.set(0);
+                y_step.set(0);
+
+                PrepareNextStep(current_direction, instruction, x_step, y_step);
             }
         }
 
@@ -104,24 +99,61 @@ public class Main {
     private static void PrepareNextStep(AtomicReference currentDirection, String instruction, AtomicInteger x_step, AtomicInteger y_step) {
         switch ((String) currentDirection.get()) {
             case EAST -> TurnFromEast(currentDirection, instruction, y_step);
-//            case "S" -> TurnFromSouth(curent_width_pos, instruction);
-//            case "W" -> TurnFromWest(curent_depth_pos, instruction);
-//            case "N" -> TurnFromNorth(curent_width_pos, instruction);
+            case WEST -> TurnFromWest(currentDirection, instruction, y_step);
+            case SOUTH -> TurnFromSouth(currentDirection, instruction, x_step);
+            case NORTH -> TurnFromNorth(currentDirection, instruction, x_step);
             default -> throw new NullPointerException();
         }
     }
 
     private static void TurnFromEast(AtomicReference currentDirection, String instruction, AtomicInteger y_step) {
-        if (instruction.equals(RIGHT)){
+        if (instruction.equals(RIGHT)) {
             currentDirection.set(SOUTH);
             y_step.getAndIncrement();
         }
 
-        if (instruction.equals(LEFT)){
+        if (instruction.equals(LEFT)) {
             currentDirection.set(NORTH);
             y_step.getAndDecrement();
         }
     }
+
+    private static void TurnFromWest(AtomicReference currentDirection, String instruction, AtomicInteger yStep) {
+        if (instruction.equals(RIGHT)) {
+            currentDirection.set(NORTH);
+            yStep.getAndDecrement();
+        }
+
+        if (instruction.equals(LEFT)) {
+            currentDirection.set(SOUTH);
+            yStep.getAndIncrement();
+        }
+    }
+
+    private static void TurnFromNorth(AtomicReference currentDirection, String instruction, AtomicInteger xStep) {
+        if (instruction.equals(RIGHT)) {
+            currentDirection.set(EAST);
+            xStep.getAndIncrement();
+        }
+
+        if (instruction.equals(LEFT)) {
+            currentDirection.set(WEST);
+            xStep.getAndDecrement();
+        }
+    }
+
+    private static void TurnFromSouth(AtomicReference currentDirection, String instruction, AtomicInteger xStep) {
+        if (instruction.equals(RIGHT)) {
+            currentDirection.set(WEST);
+            xStep.getAndDecrement();
+        }
+
+        if (instruction.equals(LEFT)) {
+            currentDirection.set(EAST);
+            xStep.getAndIncrement();
+        }
+    }
+
 
     private static void GetPosition() {
         Scanner scanner = new Scanner(System.in);
