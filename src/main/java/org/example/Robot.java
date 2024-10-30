@@ -1,8 +1,5 @@
 package org.example;
 
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-
 public class Robot {
     static final String EAST = "E";
     static final String SOUTH = "S";
@@ -15,8 +12,8 @@ public class Robot {
     private int current_width_pos;
     private int current_depth_pos;
     private String current_direction;
-    private int grid_width;
-    private int grid_depth;
+    private final int grid_width;
+    private final int grid_depth;
 
     public Robot(int grid_depth, int grid_width, String current_direction, int current_depth_pos, int current_width_pos) {
         this.grid_depth = grid_depth;
@@ -27,80 +24,62 @@ public class Robot {
     }
 
     public String executeCommand(String[] instructions) {
-        AtomicInteger x_step = new AtomicInteger(0);
-        AtomicInteger y_step = new AtomicInteger(0);
-
         for (String instruction : instructions) {
-            // move
             if (instruction.equals(FORWARD)) {
-                current_depth_pos += y_step.get();
-                current_width_pos += x_step.get();
+                moveForward();
             }
 
-            // turn
             if (!instruction.equals(FORWARD)) {
-                x_step.set(0);
-                y_step.set(0);
+                turn(instruction);
             }
         }
 
-        return  null;
+        if (outOfBounds()) {
+            return "Robot moved outside the area";
+        }
+
+        return String.format("Report: %d %d %s", current_width_pos, current_depth_pos, current_direction);
     }
 
-    private void PrepareNextStep(AtomicReference currentDirection, String instruction, AtomicInteger x_step, AtomicInteger y_step) {
-        switch ((String) currentDirection.get()) {
-            case EAST -> TurnFromEast(currentDirection, instruction, y_step);
-            case WEST -> TurnFromWest(currentDirection, instruction, y_step);
-            case SOUTH -> TurnFromSouth(currentDirection, instruction, x_step);
-            case NORTH -> TurnFromNorth(currentDirection, instruction, x_step);
-            default -> throw new NullPointerException();
-        }
-    }
-    private void TurnFromEast(AtomicReference currentDirection, String instruction, AtomicInteger y_step) {
-        if (instruction.equals(RIGHT)) {
-            currentDirection.set(SOUTH);
-            y_step.getAndIncrement();
-        }
-
-        if (instruction.equals(LEFT)) {
-            currentDirection.set(NORTH);
-            y_step.getAndDecrement();
-        }
+    private boolean outOfBounds() {
+        return current_width_pos >= grid_width || current_width_pos < 0
+                || current_depth_pos >= grid_depth || current_depth_pos < 0;
     }
 
-    private void TurnFromWest(AtomicReference currentDirection, String instruction, AtomicInteger yStep) {
-        if (instruction.equals(RIGHT)) {
-            currentDirection.set(NORTH);
-            yStep.getAndDecrement();
-        }
+    private void moveForward() {
+        switch (current_direction) {
+            case NORTH -> current_depth_pos--;
+            case SOUTH -> current_depth_pos++;
+            case EAST -> current_width_pos++;
+            case WEST -> current_width_pos--;
 
-        if (instruction.equals(LEFT)) {
-            currentDirection.set(SOUTH);
-            yStep.getAndIncrement();
+            default -> throw new IllegalArgumentException();
         }
     }
 
-    private void TurnFromNorth(AtomicReference currentDirection, String instruction, AtomicInteger xStep) {
-        if (instruction.equals(RIGHT)) {
-            currentDirection.set(EAST);
-            xStep.getAndIncrement();
-        }
-
-        if (instruction.equals(LEFT)) {
-            currentDirection.set(WEST);
-            xStep.getAndDecrement();
+    private void turn(String instruction) {
+        switch (instruction) {
+            case RIGHT -> turnRight();
+            case LEFT -> turnLeft();
+            default -> throw new IllegalArgumentException();
         }
     }
 
-    private void TurnFromSouth(AtomicReference currentDirection, String instruction, AtomicInteger xStep) {
-        if (instruction.equals(RIGHT)) {
-            currentDirection.set(WEST);
-            xStep.getAndDecrement();
+    private void turnRight() {
+        switch (current_direction) {
+            case NORTH -> current_direction = EAST;
+            case EAST -> current_direction = SOUTH;
+            case SOUTH -> current_direction = WEST;
+            case WEST -> current_direction = NORTH;
         }
+    }
 
-        if (instruction.equals(LEFT)) {
-            currentDirection.set(EAST);
-            xStep.getAndIncrement();
+    private void turnLeft() {
+        switch (current_direction) {
+            case NORTH -> current_direction = WEST;
+            case WEST -> current_direction = SOUTH;
+            case SOUTH -> current_direction = EAST;
+            case EAST -> current_direction = NORTH;
         }
     }
 }
