@@ -1,13 +1,10 @@
 package org.example;
 
 public class Robot {
-    static final String EAST = "E";
-    static final String SOUTH = "S";
-    static final String WEST = "W";
-    static final String NORTH = "N";
-    static final String RIGHT = "R";
-    static final String LEFT = "L";
-    static final String FORWARD = "F";
+    private final String EAST = "E";
+    private final String SOUTH = "S";
+    private final String WEST = "W";
+    private final String NORTH = "N";
 
     private int current_width_pos;
     private int current_depth_pos;
@@ -23,49 +20,16 @@ public class Robot {
         this.current_width_pos = current_width_pos;
     }
 
-    public String executeCommand(String[] instructions) {
-        for (String instruction : instructions) {
-            if (instruction.equals(FORWARD)) {
-                moveForward();
-            }
-
-            if (!instruction.equals(FORWARD)) {
-                turn(instruction);
-            }
-        }
-
-        if (outOfBounds()) {
-            return "Robot moved outside the area";
-        }
-
-        return String.format("Report: %d %d %s", current_width_pos, current_depth_pos, current_direction);
-    }
-
-    private boolean outOfBounds() {
-        return current_width_pos >= grid_width || current_width_pos < 0
-                || current_depth_pos >= grid_depth || current_depth_pos < 0;
-    }
-
-    private void moveForward() {
+    public void moveForward() {
         switch (current_direction) {
             case NORTH -> current_depth_pos--;
             case SOUTH -> current_depth_pos++;
             case EAST -> current_width_pos++;
             case WEST -> current_width_pos--;
-
-            default -> throw new IllegalArgumentException();
         }
     }
 
-    private void turn(String instruction) {
-        switch (instruction) {
-            case RIGHT -> turnRight();
-            case LEFT -> turnLeft();
-            default -> throw new IllegalArgumentException();
-        }
-    }
-
-    private void turnRight() {
+    public void turnRight() {
         switch (current_direction) {
             case NORTH -> current_direction = EAST;
             case EAST -> current_direction = SOUTH;
@@ -74,12 +38,21 @@ public class Robot {
         }
     }
 
-    private void turnLeft() {
+    public void turnLeft() {
         switch (current_direction) {
             case NORTH -> current_direction = WEST;
             case WEST -> current_direction = SOUTH;
             case SOUTH -> current_direction = EAST;
             case EAST -> current_direction = NORTH;
         }
+    }
+
+    public String reportPosition(){
+        return String.format("Report: %d %d %s", current_width_pos, current_depth_pos, current_direction);
+    }
+
+    public boolean isOutOfBounds() {
+        return current_width_pos >= grid_width || current_width_pos < 0
+                || current_depth_pos >= grid_depth || current_depth_pos < 0;
     }
 }
