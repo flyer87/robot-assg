@@ -1,6 +1,6 @@
 package org.example;
 
-public class Robot {
+public class Robot implements RobotInterface {
     private final String EAST = "E";
     private final String SOUTH = "S";
     private final String WEST = "W";
@@ -20,6 +20,7 @@ public class Robot {
         this.current_width_pos = current_width_pos;
     }
 
+    @Override
     public void moveForward() {
         switch (current_direction) {
             case NORTH -> current_depth_pos--;
@@ -29,6 +30,7 @@ public class Robot {
         }
     }
 
+    @Override
     public void turnRight() {
         switch (current_direction) {
             case NORTH -> current_direction = EAST;
@@ -38,6 +40,7 @@ public class Robot {
         }
     }
 
+    @Override
     public void turnLeft() {
         switch (current_direction) {
             case NORTH -> current_direction = WEST;
@@ -47,10 +50,12 @@ public class Robot {
         }
     }
 
+    @Override
     public String reportPosition(){
         return String.format("Report: %d %d %s", current_width_pos, current_depth_pos, current_direction);
     }
 
+    @Override
     public boolean isOutOfBounds() {
         return current_width_pos >= grid_width || current_width_pos < 0
                 || current_depth_pos >= grid_depth || current_depth_pos < 0;

@@ -1,13 +1,13 @@
 package org.example;
 
 public class RobotController {
-    Robot robot;
+    RobotInterface robot;
 
     final String RIGHT = "R";
     final String LEFT = "L";
     final String FORWARD = "F";
 
-    public RobotController(Robot robot) {
+    public RobotController(RobotInterface robot) {
         this.robot = robot;
     }
 
