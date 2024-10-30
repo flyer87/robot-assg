@@ -61,8 +61,6 @@ public class Main {
         int curent_depth_pos = start_depth_pos;
         AtomicReference<String> current_direction = new AtomicReference<>(start_direction);
 
-        // System.out.println(start_width_pos + " " + start_depth_pos + " " + start_direction);
-
         AtomicInteger x_step = new AtomicInteger(0);
         AtomicInteger y_step = new AtomicInteger(0);
 
@@ -89,6 +87,9 @@ public class Main {
                 PrepareNextStep(current_direction, instruction, x_step, y_step);
             }
         }
+
+
+
 
         // report
         System.out.println("Report: " + curent_width_pos + " " + curent_depth_pos + " " + current_direction);
