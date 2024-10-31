@@ -1,6 +1,6 @@
-package org.example;
+package org.yumer;
 
-import org.example.exception.OutOfBoundsException;
+import org.yumer.exception.OutOfBoundsException;
 
 public class Robot implements RobotInterface {
     private final String EAST = "E";
