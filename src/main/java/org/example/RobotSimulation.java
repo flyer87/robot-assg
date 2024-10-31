@@ -12,7 +12,8 @@ public class RobotSimulation {
 
         var inputs = inputLine.split(" ");
         if (inputs.length != 2) {
-            System.out.println("Invalid format");
+            System.out.println("Invalid format!");
+            return;
         }
         int grid_width = Integer.parseInt(inputs[0]);
         int grid_depth = Integer.parseInt(inputs[1]);
@@ -20,12 +21,21 @@ public class RobotSimulation {
         System.out.print("Start position (Example: 0 0 E): ");
         var positionLine = scanner.nextLine();
         String[] positions = positionLine.split(" ");
+        if (positions.length != 3) {
+            System.out.println("Invalid format!");
+            return;
+        }
+
         var start_width_pos = Integer.parseInt(positions[0]);
         var start_depth_pos = Integer.parseInt(positions[1]);
         var start_direction = positions[2];
 
         System.out.print("Instructions (Example: RFRF): ");
         String instructionsLine = scanner.nextLine();
+        if (instructionsLine.isBlank()) {
+            System.out.println("Invalid format!");
+            return;
+        }
         String[] instructions = instructionsLine.split("");
 
         scanner.close();

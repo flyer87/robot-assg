@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.exception.OutOfBoundsException;
+
 public class RobotController {
     RobotInterface robot;
 
@@ -12,18 +14,18 @@ public class RobotController {
     }
 
     public void executeCommands(String[] instructions) {
-        for (String instruction : instructions) {
-            switch (instruction) {
-                case RIGHT -> robot.turnRight();
-                case LEFT -> robot.turnLeft();
-                case FORWARD -> {
-                    robot.moveForward();
-                    if (robot.isOutOfBounds()) {
-                        throw new IndexOutOfBoundsException("Robot moved outside of room bounds");
-                    }
+        try {
+            for (String instruction : instructions) {
+                switch (instruction) {
+                    case RIGHT -> robot.turnRight();
+                    case LEFT -> robot.turnLeft();
+                    case FORWARD -> robot.moveForward();
+                    default -> throw new IllegalArgumentException("Invalid instruction: " + instruction);
                 }
-                default -> throw new IllegalArgumentException();
             }
+        } catch (OutOfBoundsException | IllegalArgumentException exception) {
+            System.err.println(exception.getMessage());
+            return;
         }
 
         System.out.println(robot.reportPosition());

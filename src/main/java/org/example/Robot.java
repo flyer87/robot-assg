@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.exception.OutOfBoundsException;
+
 public class Robot implements RobotInterface {
     private final String EAST = "E";
     private final String SOUTH = "S";
@@ -21,12 +23,16 @@ public class Robot implements RobotInterface {
     }
 
     @Override
-    public void moveForward() {
+    public void moveForward() throws OutOfBoundsException {
         switch (current_direction) {
             case NORTH -> current_depth_pos--;
             case SOUTH -> current_depth_pos++;
             case EAST -> current_width_pos++;
             case WEST -> current_width_pos--;
+        }
+
+        if (isOutOfBounds()) {
+            throw new OutOfBoundsException("Error: Robot moved outside of room bounds");
         }
     }
 
@@ -51,12 +57,14 @@ public class Robot implements RobotInterface {
     }
 
     @Override
-    public String reportPosition(){
+    public String reportPosition() {
+        if (isOutOfBounds()) {
+            return "Report: Robot moved out of bounds.";
+        }
         return String.format("Report: %d %d %s", current_width_pos, current_depth_pos, current_direction);
     }
 
-    @Override
-    public boolean isOutOfBounds() {
+    private boolean isOutOfBounds() {
         return current_width_pos >= grid_width || current_width_pos < 0
                 || current_depth_pos >= grid_depth || current_depth_pos < 0;
     }
