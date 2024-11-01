@@ -43,6 +43,6 @@ public class RobotSimulation {
         Robot robot = new Robot(grid_depth, grid_width, start_direction,
                 start_depth_pos, start_width_pos);
         RobotController robotController = new RobotController(robot);
-        robotController.executeCommands(instructions);
+        System.out.println(robotController.executeCommands(instructions));
     }
 }

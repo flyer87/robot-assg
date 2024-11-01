@@ -13,7 +13,7 @@ public class RobotController {
         this.robot = robot;
     }
 
-    public void executeCommands(String[] instructions) {
+    public String executeCommands(String[] instructions) {
         try {
             for (String instruction : instructions) {
                 switch (instruction) {
@@ -24,10 +24,9 @@ public class RobotController {
                 }
             }
         } catch (OutOfBoundsException | IllegalArgumentException exception) {
-            System.err.println(exception.getMessage());
-            return;
+            return exception.getMessage();
         }
 
-        System.out.println(robot.reportPosition());
+        return robot.reportPosition();
     }
 }
